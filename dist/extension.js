@@ -1,1 +1,270 @@
-(()=>{"use strict";var t={669:(t,e)=>{Object.defineProperty(e,"__esModule",{value:!0}),e.toCSS=void 0,e.toCSS=function(t){return t.split(",").map((t=>{if(t){let[e,o]=t.split(":");return e=e.replace(/[A-Z]/g,(function(t){return"-"+t.toLowerCase()})),o=o.replace(/'/g,""),`${e}:${o}`}return t})).join(";")}},453:(t,e)=>{Object.defineProperty(e,"__esModule",{value:!0}),e.Json2Ts=void 0,e.Json2Ts=class{constructor(t={}){this.interfaces={},this.config={prependWithI:!0,sortAlphabetically:!1,addExport:!1,useArrayGeneric:!1,optionalFields:!1,prefix:"",rootObjectName:"RootObject",...t}}convert(t){return this.interfaces={},this.unknownToTS(t),this.interfacesToString()}unknownToTS(t,e){let o=typeof t;return"object"===o&&(o=Array.isArray(t)?this.arrayToTS(t,e):this.objectToTS(t,e&&this.capitalizeFirst(e))),o}arrayToTS(t,e){let o=t.length?void 0:"any";for(let n of t){const t=this.unknownToTS(n,this.keyToTypeName(e));if(o&&t!==o){o="any";break}o=t}return this.config.useArrayGeneric?`Array<${o}>`:`${o}[]`}keyToTypeName(t){if(!t||t.length<2)return t;const[e,...o]=Array.prototype.slice.apply(t),n=o.pop();return[e.toUpperCase(),...o,"s"===n?"":n].join("")}capitalizeFirst(t){const[e,...o]=Array.prototype.slice.apply(t);return[e.toUpperCase(),...o].join("")}objectToTS(t,e=this.config.rootObjectName){if(null===t)return"any";const{prependWithI:o,prefix:n}=this.config;o&&(e=`I${n||""}${e}`),this.interfaces[e]||(this.interfaces[e]={});const r=this.interfaces[e];return Object.keys(t).forEach((e=>{const o=t[e],n=this.unknownToTS(o,e);r[e]&&0!==r[e].indexOf("any")||(r[e]=n)})),e}interfacesToString(){const{sortAlphabetically:t,addExport:e,optionalFields:o}=this.config;return Object.keys(this.interfaces).map((n=>{const r=[`${e?"export ":""}interface ${n} {`],s=Object.keys(this.interfaces[n]);return t&&s.sort(),s.forEach((t=>{const e=this.interfaces[n][t];r.push(`  ${t}${o?"?":""}: ${e};`)})),r.push("}\n"),r.join("\n")})).join("\n")}}},496:t=>{t.exports=require("vscode")}},e={};function o(n){var r=e[n];if(void 0!==r)return r.exports;var s=e[n]={exports:{}};return t[n](s,s.exports,o),s.exports}var n={};(()=>{var t=n;Object.defineProperty(t,"__esModule",{value:!0}),t.deactivate=t.activate=void 0;const e=o(496),r=o(453),s=o(669),i=t=>{const o=e.window.activeTextEditor;if(o){const n=o.selection;o.edit((o=>{o.replace(new e.Range(n.start,n.end),t)}))}};t.activate=function(t){const o=e.commands.registerCommand("cssobj2css",(()=>{const t=e.window.activeTextEditor;if(t){const e=t.selection;let o=t.document.getText(e);i((0,s.toCSS)(o))}})),n=e.commands.registerCommand("json2dts",(()=>{const t=e.window.activeTextEditor;if(t){const o=t.selection;let n=t.document.getText(o);const s=e.workspace.getConfiguration().get("vscodePluginBtrip.json2ts");try{const o=new r.Json2Ts(s);if(n){const t=JSON.parse(n),e=o.convert(t);i(e)}else{n=t.document.getText();const r=JSON.parse(n);((t,o)=>{const n=e.window.activeTextEditor;n&&n.edit((n=>{const r=new e.Position(o,0);n.replace(new e.Range(new e.Position(0,0),r),t)}))})(o.convert(r),t.document.lineCount+1)}}catch(t){e.window.showErrorMessage("不是json对象")}}}));t.subscriptions.push(o),t.subscriptions.push(n)},t.deactivate=function(){}})(),module.exports=n})();
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ([
+/* 0 */,
+/* 1 */
+/***/ ((module) => {
+
+module.exports = require("vscode");
+
+/***/ }),
+/* 2 */
+/***/ ((__unused_webpack_module, exports) => {
+
+
+// https://github.com/beshanoe/json2ts
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Json2Ts = void 0;
+class Json2Ts {
+    constructor(config = {}) {
+        this.interfaces = {};
+        this.config = {
+            // 每个属性都加I
+            prependWithI: true,
+            // 字母顺序排序
+            sortAlphabetically: false,
+            // 添加export
+            addExport: false,
+            // 使用Array<T>
+            useArrayGeneric: false,
+            // 全部可选
+            optionalFields: false,
+            // 类型前缀 类似于namespace功能
+            prefix: '',
+            // 根节点名称
+            rootObjectName: 'RootObject',
+            ...config,
+        };
+    }
+    convert(json) {
+        this.interfaces = {};
+        this.unknownToTS(json);
+        return this.interfacesToString();
+    }
+    unknownToTS(value, key = void 0) {
+        let type = typeof value;
+        if (type === 'object') {
+            if (Array.isArray(value)) {
+                type = this.arrayToTS(value, key);
+            }
+            else {
+                type = this.objectToTS(value, key && this.capitalizeFirst(key));
+            }
+        }
+        return type;
+    }
+    arrayToTS(array, key = void 0) {
+        let type = array.length ? void 0 : 'any';
+        for (let item of array) {
+            const itemType = this.unknownToTS(item, this.keyToTypeName(key));
+            if (type && itemType !== type) {
+                type = 'any';
+                break;
+            }
+            else {
+                type = itemType;
+            }
+        }
+        return this.config.useArrayGeneric ? `Array<${type}>` : `${type}[]`;
+    }
+    keyToTypeName(key = void 0) {
+        if (!key || key.length < 2) {
+            return key;
+        }
+        const [first, ...rest] = Array.prototype.slice.apply(key);
+        const last = rest.pop();
+        return [first.toUpperCase(), ...rest, last === 's' ? '' : last].join('');
+    }
+    capitalizeFirst(str) {
+        const [first, ...rest] = Array.prototype.slice.apply(str);
+        return [first.toUpperCase(), ...rest].join('');
+    }
+    objectToTS(obj, type = this.config.rootObjectName) {
+        if (obj === null) {
+            return 'any';
+        }
+        const { prependWithI, prefix } = this.config;
+        if (prependWithI) {
+            type = `I${prefix || ''}${type}`;
+        }
+        if (!this.interfaces[type]) {
+            this.interfaces[type] = {};
+        }
+        const interfaceName = this.interfaces[type];
+        Object.keys(obj).forEach((key) => {
+            const value = obj[key];
+            const fieldType = this.unknownToTS(value, key);
+            if (!interfaceName[key] || interfaceName[key].indexOf('any') === 0) {
+                interfaceName[key] = fieldType;
+            }
+        });
+        return type;
+    }
+    interfacesToString() {
+        const { sortAlphabetically, addExport, optionalFields } = this.config;
+        return Object.keys(this.interfaces)
+            .map((name) => {
+            const interfaceStr = [
+                `${addExport ? 'export ' : ''}interface ${name} {`,
+            ];
+            const fields = Object.keys(this.interfaces[name]);
+            if (sortAlphabetically) {
+                fields.sort();
+            }
+            fields.forEach((field) => {
+                const type = this.interfaces[name][field];
+                interfaceStr.push(`  ${field}${optionalFields ? '?' : ''}: ${type};`);
+            });
+            interfaceStr.push('}\n');
+            return interfaceStr.join('\n');
+        })
+            .join('\n');
+    }
+}
+exports.Json2Ts = Json2Ts;
+
+
+/***/ }),
+/* 3 */
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.toCSS = void 0;
+function toCSS(str) {
+    const cssArray = str.split(',');
+    const newCssArray = cssArray.map((item) => {
+        if (item) {
+            let [name, value] = item.split(':');
+            name = name.replace(/[A-Z]/g, function (match) {
+                return '-' + match.toLowerCase();
+            });
+            value = value.replace(/'/g, '');
+            return `${name}:${value}`;
+        }
+        return item;
+    });
+    return newCssArray.join(';');
+}
+exports.toCSS = toCSS;
+
+
+/***/ })
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
+var exports = __webpack_exports__;
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.deactivate = exports.activate = void 0;
+// The module 'vscode' contains the VS Code extensibility API
+// Import the module and reference it with the alias vscode in your code below
+const vscode = __webpack_require__(1);
+const json2dts_1 = __webpack_require__(2);
+const json2css_1 = __webpack_require__(3);
+const replaceSelectionText = (val) => {
+    const editor = vscode.window.activeTextEditor;
+    if (editor) {
+        const selection = editor.selection;
+        editor.edit((editBuilder) => {
+            editBuilder.replace(new vscode.Range(selection.start, selection.end), val);
+        });
+    }
+};
+const replaceAllText = (val, start) => {
+    const editor = vscode.window.activeTextEditor;
+    if (editor) {
+        editor.edit((editBuilder) => {
+            // 从开始到结束，全量替换
+            const end = new vscode.Position(start, 0);
+            editBuilder.replace(new vscode.Range(new vscode.Position(0, 0), end), val);
+        });
+    }
+};
+// this method is called when your extension is activated
+// your extension is activated the very first time the command is executed
+function activate(context) {
+    // Use the console to output diagnostic information (console.log) and errors (console.error)
+    // This line of code will only be executed once when your extension is activated
+    // The command has been defined in the package.json file
+    // Now provide the implementation of the command with registerCommand
+    // The commandId parameter must match the command field in package.json
+    const cssobj2css = vscode.commands.registerCommand('cssobj2css', () => {
+        // The code you place here will be executed every time your command is executed
+        const editor = vscode.window.activeTextEditor;
+        if (editor) {
+            const selection = editor.selection;
+            let text = editor.document.getText(selection);
+            replaceSelectionText((0, json2css_1.toCSS)(text));
+        }
+    });
+    const obj2dts = vscode.commands.registerCommand('json2dts', () => {
+        const editor = vscode.window.activeTextEditor;
+        if (editor) {
+            const selection = editor.selection;
+            let jsonInput = editor.document.getText(selection);
+            const json2tsConfig = vscode.workspace
+                .getConfiguration()
+                .get('vscodePluginBtrip.json2ts');
+            try {
+                // TODO 配置项
+                const json2ts = new json2dts_1.Json2Ts(json2tsConfig);
+                if (jsonInput) {
+                    const json = JSON.parse(jsonInput);
+                    const resultOutput = json2ts.convert(json);
+                    replaceSelectionText(resultOutput);
+                }
+                else {
+                    // 获取全量
+                    jsonInput = editor.document.getText();
+                    const json = JSON.parse(jsonInput);
+                    const resultOutput = json2ts.convert(json);
+                    replaceAllText(resultOutput, editor.document.lineCount + 1);
+                }
+            }
+            catch (e) {
+                vscode.window.showErrorMessage('不是json对象');
+            }
+        }
+    });
+    context.subscriptions.push(cssobj2css);
+    context.subscriptions.push(obj2dts);
+}
+exports.activate = activate;
+// this method is called when your extension is deactivated
+function deactivate() { }
+exports.deactivate = deactivate;
+
+})();
+
+module.exports = __webpack_exports__;
+/******/ })()
+;
+//# sourceMappingURL=extension.js.map

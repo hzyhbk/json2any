@@ -13,6 +13,13 @@
     "*"
   ],
   "main": "./dist/extension.js",
+  "author": {
+    "name": "hzyhbk",
+    "email": "hzyhbk@163.com"
+  },
+  "repository": {
+    "url": "https://github.com/hzyhbk/json2any"
+  },
   "contributes": {
     "configuration": {
       "type": "object",
