@@ -3,6 +3,13 @@
   "displayName": "json2any",
   "description": "json2css json2dts",
   "version": "0.0.1",
+  "keywords": [
+    "json2ts",
+    "json to ts",
+    "react2css",
+    "react to css"
+  ],
+  "icon": "./json2any.png",
   "engines": {
     "vscode": "^1.67.0"
   },
