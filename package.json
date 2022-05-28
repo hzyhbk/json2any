@@ -20,6 +20,7 @@
   "repository": {
     "url": "https://github.com/hzyhbk/json2any"
   },
+  "publisher": "hzyhbk",
   "contributes": {
     "configuration": {
       "type": "object",
