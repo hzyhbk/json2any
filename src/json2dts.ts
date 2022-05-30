@@ -8,6 +8,7 @@ interface IJson2TsConfigPrivate {
   optionalFields: boolean;
   prefix: string;
   rootObjectName: string;
+  namespace: boolean;
 }
 
 export type IJson2TsConfig = Partial<IJson2TsConfigPrivate>;
@@ -23,6 +24,7 @@ export class Json2Ts {
 
   constructor(config: IJson2TsConfig = {}) {
     this.config = {
+      namespace: false,
       // 每个属性都加I
       prependWithI: true,
       // 字母顺序排序
@@ -44,7 +46,12 @@ export class Json2Ts {
   convert(json: {}) {
     this.interfaces = {};
     this.unknownToTS(json);
-    return this.interfacesToString();
+    let data = this.interfacesToString();
+    if (this.config.namespace) {
+      data = `declare namespace Root {
+${data}}`;
+    }
+    return data;
   }
 
   private unknownToTS(value: {}, key: string | undefined = void 0) {
@@ -113,7 +120,8 @@ export class Json2Ts {
   }
 
   private interfacesToString() {
-    const { sortAlphabetically, addExport, optionalFields } = this.config;
+    const { sortAlphabetically, addExport, optionalFields, namespace } =
+      this.config;
     return Object.keys(this.interfaces)
       .map((name) => {
         const interfaceStr = [
@@ -128,7 +136,9 @@ export class Json2Ts {
           interfaceStr.push(`  ${field}${optionalFields ? '?' : ''}: ${type};`);
         });
         interfaceStr.push('}\n');
-        return interfaceStr.join('\n');
+        return interfaceStr
+          .map((item) => (namespace ? `  ${item}` : item))
+          .join('\n');
       })
       .join('\n');
   }

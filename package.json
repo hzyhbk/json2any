@@ -31,8 +31,18 @@
   "contributes": {
     "configuration": {
       "type": "object",
-      "title": "vscode-plugin-btrip",
+      "title": "json2any",
       "properties": {
+        "json2any.showJson2tsConfig": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否每次转化前选择配置"
+        },
+        "json2any.json2ts.namespace": {
+          "type": "boolean",
+          "default": false,
+          "description": "namespace"
+        },
         "json2any.json2ts.prependWithI": {
           "type": "boolean",
           "default": true,
