@@ -33,37 +33,37 @@
       "type": "object",
       "title": "vscode-plugin-btrip",
       "properties": {
-        "vscodePluginBtrip.json2ts.prependWithI": {
+        "json2any.json2ts.prependWithI": {
           "type": "boolean",
           "default": true,
           "description": "是否给每个类型添加前缀 I"
         },
-        "vscodePluginBtrip.json2ts.sortAlphabetically": {
+        "json2any.json2ts.sortAlphabetically": {
           "type": "boolean",
           "default": false,
           "description": "是否按字母顺序排序属性"
         },
-        "vscodePluginBtrip.json2ts.addExport": {
+        "json2any.json2ts.addExport": {
           "type": "boolean",
           "default": false,
           "description": "是否导出每个类型"
         },
-        "vscodePluginBtrip.json2ts.useArrayGeneric": {
+        "json2any.json2ts.useArrayGeneric": {
           "type": "boolean",
           "default": false,
           "description": "是否使用 Array<T> 声明数组类型"
         },
-        "vscodePluginBtrip.json2ts.optionalFields": {
+        "json2any.json2ts.optionalFields": {
           "type": "boolean",
           "default": false,
           "description": "是否将所有属性都置为可选"
         },
-        "vscodePluginBtrip.json2ts.prefix": {
+        "json2any.json2ts.prefix": {
           "type": "string",
           "default": "",
           "description": "类型名前缀"
         },
-        "vscodePluginBtrip.json2ts.rootObjectName": {
+        "json2any.json2ts.rootObjectName": {
           "type": "string",
           "default": "RootObject",
           "description": "根类型名"
@@ -95,12 +95,6 @@
           "when": "resourceLangId == typescript"
         }
       ]
-    },
-    "keybindings": {
-      "command": "cssobj2css",
-      "key": "ctrl+t",
-      "mac": "cmd+t",
-      "when": "editorTextFocus"
     }
   },
   "scripts": {

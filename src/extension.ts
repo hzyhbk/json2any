@@ -58,7 +58,7 @@ export function activate(context: vscode.ExtensionContext) {
       let jsonInput = editor.document.getText(selection);
       const json2tsConfig = vscode.workspace
         .getConfiguration()
-        .get('vscodePluginBtrip.json2ts') as IJson2TsConfig;
+        .get('json2any.json2ts') as IJson2TsConfig;
 
       try {
         // TODO 配置项
