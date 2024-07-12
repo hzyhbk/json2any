@@ -1,8 +1,8 @@
 {
   "name": "json2any",
   "displayName": "json2any",
-  "description": "json2css json2dts",
-  "version": "0.0.5",
+  "description": "json2css css2json json2dts",
+  "version": "0.0.6",
   "keywords": [
     "json2ts",
     "json to ts",
@@ -90,6 +90,11 @@
         "command": "json2dts",
         "title": "json to dts",
         "icon": "./json2any.png"
+      },
+      {
+        "command": "css2cssobj",
+        "title": "css to css-obj",
+        "icon": "./json2any.png"
       }
     ],
     "menus": {
@@ -103,6 +108,11 @@
           "command": "json2dts",
           "group": "navigation",
           "when": "resourceLangId == typescript"
+        },
+        {
+          "command": "css2cssobj",
+          "group": "navigation",
+          "when": "resourceLangId == typescriptreact || resourceLangId == javascriptreact"
         }
       ]
     }

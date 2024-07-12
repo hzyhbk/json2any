@@ -3,16 +3,14 @@
 import * as vscode from 'vscode';
 import { Json2Ts, IJson2TsConfig } from './json2dts';
 import { toCSS } from './json2css';
+import { cssToJson } from './css2json';
 
 const replaceSelectionText = (val: string) => {
   const editor = vscode.window.activeTextEditor;
   if (editor) {
     const selection = editor.selection;
     editor.edit((editBuilder) => {
-      editBuilder.replace(
-        new vscode.Range(selection.start, selection.end),
-        val
-      );
+      editBuilder.replace(new vscode.Range(selection.start, selection.end), val);
     });
   }
 };
@@ -23,10 +21,7 @@ const replaceAllText = (val: string, start: number) => {
     editor.edit((editBuilder) => {
       // 从开始到结束，全量替换
       const end = new vscode.Position(start, 0);
-      editBuilder.replace(
-        new vscode.Range(new vscode.Position(0, 0), end),
-        val
-      );
+      editBuilder.replace(new vscode.Range(new vscode.Position(0, 0), end), val);
     });
   }
 };
@@ -57,12 +52,8 @@ export function activate(context: vscode.ExtensionContext) {
       let jsonInput = editor.document.getText(selection);
 
       const conf = vscode.workspace.getConfiguration();
-      const json2tsConfig = conf.get(
-        'json2any.json2ts'
-      ) as Required<IJson2TsConfig>;
-      const showJson2tsConfig = conf.get(
-        'json2any.showJson2tsConfig'
-      ) as boolean;
+      const json2tsConfig = conf.get('json2any.json2ts') as Required<IJson2TsConfig>;
+      const showJson2tsConfig = conf.get('json2any.showJson2tsConfig') as boolean;
       let pro = Promise.resolve(json2tsConfig);
       if (showJson2tsConfig) {
         pro = vscode.window
@@ -101,7 +92,7 @@ export function activate(context: vscode.ExtensionContext) {
             ],
             {
               canPickMany: true,
-            }
+            },
           )
           .then((res) => {
             if (Array.isArray(res)) {
@@ -121,8 +112,7 @@ export function activate(context: vscode.ExtensionContext) {
                   // @ts-ignore
                   if (typeof json2tsConfig[key] === 'boolean') {
                     // @ts-ignore
-                    json2tsConfig[key] =
-                      picked.indexOf(key) > -1 ? true : false;
+                    json2tsConfig[key] = picked.indexOf(key) > -1 ? true : false;
                   }
                 }
                 return json2tsConfig;
@@ -157,8 +147,18 @@ export function activate(context: vscode.ExtensionContext) {
     }
   });
 
+  const css2cssobj = vscode.commands.registerCommand('css2cssobj', () => {
+    const editor = vscode.window.activeTextEditor;
+    if (editor) {
+      const selection = editor.selection;
+      let text = editor.document.getText(selection);
+      replaceSelectionText(cssToJson(text));
+    }
+  });
+
   context.subscriptions.push(cssobj2css);
   context.subscriptions.push(obj2dts);
+  context.subscriptions.push(css2cssobj);
 }
 
 // this method is called when your extension is deactivated
